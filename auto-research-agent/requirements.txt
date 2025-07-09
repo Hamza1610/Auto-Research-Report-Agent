@@ -1,0 +1,15 @@
+# Google Cloud & AI
+google-cloud-storage
+google-generativeai
+google-api-python-client
+google-auth
+
+# PDF Generation
+reportlab
+jinja2
+
+# HTTP Requests
+requests
+
+# Environment Management
+python-dotenv
