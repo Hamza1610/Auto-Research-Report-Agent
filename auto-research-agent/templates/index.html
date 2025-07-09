@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auto-Research Report Agent</title>
+  <style>
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Animated Background */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      background-size: 400% 400%;
+      animation: gradientFlow 15s ease infinite;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Background Texture Overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: radial-gradient(circle at center, rgba(128,128,128,0.2) 10%, transparent 70%);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      max-width: 600px;
+      width: 100%;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
+      margin: auto;
+    }
+
+    .container:hover {
+      transform: scale(1.01);
+    }
+
+    /* Typography */
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      font-size: clamp(24px, 4vw, 28px);
+      margin-bottom: 30px;
+      background: linear-gradient(to right, #3a7bd5, #00d2ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      max-width: 500px;
+      padding: 14px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border 0.3s, box-shadow 0.3s;
+      background: #f9f9f9;
+      margin: 0 auto;
+      display: block;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #3a7bd5;
+      box-shadow: 0 0 10px rgba(58, 123, 213, 0.3);
+      outline: none;
+      background: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      max-height: 300px;
+    }
+
+    /* Button Styles */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+      color: white;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.4s ease, transform 0.2s ease;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #005bea, #00c6fb);
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Response Styles */
+    .response {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 16px;
+      display: none;
+      animation: fadeIn 0.5s ease forwards;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success {
+      background-color: #e6ffed;
+      border: 1px solid #7ddc8e;
+      color: #215732;
+    }
+
+    .error {
+      background-color: #ffe7e7;
+      border: 1px solid #e57373;
+      color: #7f1d1d;
+    }
+
+    .loading {
+      background-color: #fff8dc;
+      border: 1px solid #f3d19c;
+      color: #6b4e12;
+      text-align: center;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .main-wrapper {
+        padding: 10px 0;
+      }
+
+      .container {
+        padding: 25px 20px;
+        margin: 10px;
+        border-radius: 15px;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      input[type="text"],
+      textarea {
+        padding: 12px;
+        font-size: 16px;
+      }
+
+      button {
+        font-size: 16px;
+        padding: 12px 24px;
+        min-width: 180px;
+      }
+
+      .response {
+        padding: 15px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+        margin: 5px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      input[type="text"],
+      textarea {
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 10px 20px;
+        min-width: 160px;
+      }
+
+      .response {
+        padding: 12px;
+        font-size: 13px;
+      }
+    }
+
+    /* Landscape orientation adjustments */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .main-wrapper {
+        padding: 10px 0;
+      }
+
+      .container {
+        padding: 20px 25px;
+      }
+
+      h1 {
+        margin-bottom: 15px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      textarea {
+        min-height: 80px;
+      }
+    }
+
+    /* High DPI displays */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .container {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      }
+    }
+
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+      body {
+        animation: none;
+      }
+
+      .container {
+        transition: none;
+      }
+
+      button {
+        transition: none;
+      }
+
+      .response {
+        animation: none;
+      }
+    }
+
+    /* Focus indicators for accessibility */
+    button:focus,
+    input:focus,
+    textarea:focus {
+      outline: 2px solid #3a7bd5;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    <div class="container">
+      <h1>🔍 Auto-Research Report Agent</h1>
+
+      <form id="researchForm">
+        <div class="form-group">
+          <label for="query">Research Query:</label>
+          <textarea id="query" name="query" placeholder="Enter your research question here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="gcs_paths">GCS Paths (optional):</label>
+          <input type="text" id="gcs_paths" name="gcs_paths" placeholder="gs://your-bucket/doc1.txt, gs://your-bucket/doc2.txt">
+        </div>
+
+        <div class="button-container">
+          <button type="submit">🚀 Generate Research Report</button>
+        </div>
+      </form>
+
+      <div id="response" class="response"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('researchForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const query = document.getElementById('query').value;
+      const gcsPaths = document.getElementById('gcs_paths').value;
+      const responseDiv = document.getElementById('response');
+
+      // Show loading
+      responseDiv.className = 'response loading';
+      responseDiv.style.display = 'block';
+      responseDiv.innerHTML = '⏳ Processing your research request... Please wait.';
+
+      const requestData = { query: query };
+
+      if (gcsPaths.trim()) {
+        requestData.gcs_paths = gcsPaths.split(',').map(path => path.trim());
+      }
+
+      try {
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          responseDiv.className = 'response success';
+          let downloadButtonHTML = '';
+          let viewButtonHTML = '';
+          if (result.local_pdf_path) {
+            // Extract filename from local_pdf_path (should be the PDF filename)
+            const filename = result.local_pdf_path.split(/[/\\]/).pop();
+            viewButtonHTML = `<a href="/view?filename=${encodeURIComponent(filename)}" id="viewReportBtn" style="display:inline-block;margin-top:15px;margin-right:10px;padding:12px 24px;background:linear-gradient(135deg,#00b894,#00d2ff);color:white;border:none;border-radius:10px;font-size:16px;text-decoration:none;text-align:center;cursor:pointer;">👁️ View Report</a>`;
+            downloadButtonHTML = `<a href="/download/${encodeURIComponent(filename)}" id="downloadPdfBtn" style="display:inline-block;margin-top:15px;padding:12px 24px;background:linear-gradient(135deg,#3a7bd5,#00d2ff);color:white;border:none;border-radius:10px;font-size:16px;text-decoration:none;text-align:center;cursor:pointer;">⬇️ Download PDF</a>`;
+          }
+          responseDiv.innerHTML = `
+            <h3>✅ Research Report Generated!</h3>
+            <p><strong>Status:</strong> ${result.status}</p>
+            ${result.report_url ? `<p><strong>Report URL:</strong> <a href="${result.report_url}" target="_blank">View Report (Cloud)</a></p>` : ''}
+            ${result.message ? `<p><strong>Message:</strong> ${result.message}</p>` : ''}
+            ${viewButtonHTML}
+            ${downloadButtonHTML}
+          `;
+        } else {
+          responseDiv.className = 'response error';
+          responseDiv.innerHTML = `
+            <h3>❌ Error</h3>
+            <p><strong>Error:</strong> ${result.error || 'An unknown error occurred'}</p>
+          `;
+        }
+      } catch (error) {
+        responseDiv.className = 'response error';
+        responseDiv.innerHTML = `
+          <h3>❌ Network Error</h3>
+          <p><strong>Error:</strong> ${error.message}</p>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

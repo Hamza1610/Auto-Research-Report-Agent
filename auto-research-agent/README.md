@@ -7,7 +7,7 @@ An intelligent agent that automatically researches topics, analyzes content, and
 - 🔍 **Web Search**: Automatically searches the web for relevant information
 - 📊 **AI Analysis**: Uses Google Gemini to analyze and structure content
 - 📄 **PDF Generation**: Creates professional PDF reports with custom templates
-- ☁️ **Cloud Storage**: Optional Google Cloud Storage integration for document storage
+- ☁️ **Cloud Storage**: Optional Google Cloud Storage integration for document storage(Yet to be fullly implemented)
 - 🌐 **Web Interface**: Simple web UI for submitting research queries
 
 ## Quick Start
@@ -22,14 +22,8 @@ pip install -r requirements.txt
 
 You have two options:
 
-#### Option A: Use the Setup Script (Recommended)
-```bash
-python setup.py
-```
 
-This interactive script will help you create a `.env` file with all required API keys.
-
-#### Option B: Manual Setup
+#### Setup
 Create a `.env` file in the project root with the following variables:
 
 ```env
@@ -57,6 +51,9 @@ GCS_REPORTS_BUCKET=your-reports-bucket-name
 
 ### 4. Run the Application
 
+```bash
+cd Auto-Research-Report-Agent/
+```
 ```bash
 python main.py
 ```
@@ -105,7 +102,7 @@ Send a POST request to `/` with JSON body:
 ```json
 {
   "query": "What is artificial intelligence?",
-  "gcs_paths": ["gs://your-bucket/doc1.txt"]  // optional
+  "gcs_paths": ["gs://your-bucket/doc1.txt"]  // optional(yet to be implemented)
 }
 ```
 
@@ -143,3 +140,21 @@ python -m pytest tests/
 ## License
 
 This project is open source. Feel free to contribute! 
+
+## Contributing
+
+This project is open source and welcomes contributions from developers of all backgrounds! If you are interested in connecting, collaborating, or contributing, please follow these guidelines:
+
+- **Fork the repository** and create your feature branch (`git checkout -b feature/YourFeature`)
+- **Commit your changes** (`git commit -am 'Add new feature'`)
+- **Push to the branch** (`git push origin feature/YourFeature`)
+- **Open a Pull Request** describing your changes and why they should be merged
+
+### Ways to Contribute
+- Add new features or agents
+- Improve documentation or templates
+- Report bugs or suggest enhancements via Issues
+- Help with testing and code review
+- Complet the Google Cloud implementation for file download
+
+Feel free to connect with other contributors through Issues and Pull Requests. All constructive feedback and collaboration are appreciated! 

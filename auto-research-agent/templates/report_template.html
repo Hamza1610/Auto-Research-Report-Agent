@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ data.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* Background + Animations */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #f0f4ff, #e0eaff);
+      animation: gradientShift 15s ease infinite;
+      background-size: 200% 200%;
+      color: #2c3e50;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 40px auto;
+      padding: 40px 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(6px);
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 30px;
+      text-align: center;
+      color: #1f2d3d;
+      margin-bottom: 25px;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      color: #2980b9;
+      border-left: 5px solid #00bcd4;
+      padding-left: 15px;
+      margin-top: 40px;
+      margin-bottom: 15px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #0077b6;
+    }
+
+    .summary, .conclusion {
+      background: #f1f9ff;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 5px solid #3498db;
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .summary:hover, .conclusion:hover {
+      transform: scale(1.02);
+    }
+
+    .insight {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+      border-left: 5px solid #74b9ff;
+      margin-bottom: 25px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .insight:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ecf3f9;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 10px;
+      color: #2d3436;
+    }
+
+    .meta-info span {
+      font-weight: 500;
+    }
+
+    button {
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+      color: white;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.4s ease, transform 0.2s ease;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 13px;
+      color: #8395a7;
+      border-top: 1px solid #dcdde1;
+      padding-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .meta-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>{{ data.title }}</h1>
+
+    <h2>Executive Summary</h2>
+    <div class="summary">
+      <p>{{ data.executive_summary }}</p>
+    </div>
+
+    <h2>Key Insights</h2>
+    {% for item in data.key_insights %}
+    <div class="insight">
+      <h3>{{ item.insight }}</h3>
+      <p>{{ item.explanation }}</p>
+      <div class="meta-info">
+        <span>Relevance Score: {{ item.relevance_score }}/10</span>
+      </div>
+    </div>
+    {% endfor %}
+
+    <h2>Source Analysis</h2>
+    <div class="meta-info">
+      <span>Overall Sentiment: {{ data.source_analysis.sentiment }}</span>
+      <span>Confidence in Source: {{ data.source_analysis.confidence }}</span>
+    </div>
+
+    <h2>Conclusion</h2>
+    <div class="conclusion">
+      <p>{{ data.conclusion }}</p>
+    </div>
+
+    <div style="text-align:center;margin-top:30px;">
+      {% if data.pdf_filename %}
+        <a href="/download/{{ data.pdf_filename }}" class="download-btn" style="display:inline-block;padding:14px 30px;background:linear-gradient(135deg,#3a7bd5,#00d2ff);color:white;border:none;border-radius:10px;font-size:18px;text-decoration:none;text-align:center;cursor:pointer;">⬇️ Download Research Report (PDF)</a>
+      {% else %}
+        <button disabled style="background:#ccc;cursor:not-allowed;">PDF Not Available</button>
+      {% endif %}
+    </div>
+
+    <div class="footer">
+      <p>✨ Auto-Generated Report by the Research & Report Agent</p>
+    </div>
+  </div>
+</body>
+</html>
