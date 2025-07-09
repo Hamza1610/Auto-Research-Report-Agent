@@ -1,0 +1,13 @@
+# Google Cloud Configuration (Optional - only needed if using GCS)
+GCP_PROJECT_ID=your-gcp-project-id
+GCP_REGION=us-central1
+
+# Google Gemini API (Required)
+GEMINI_API_KEY=your-gemini-api-key-here
+
+# Web Search API (Required)
+SERPER_API_KEY=your-serper-api-key-here
+
+# Google Cloud Storage (Optional - only needed if using GCS)
+GCS_SOURCE_BUCKET=your-source-bucket-name
+GCS_REPORTS_BUCKET=your-reports-bucket-name 
