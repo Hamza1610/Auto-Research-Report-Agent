@@ -11,6 +11,9 @@ An intelligent agent that automatically researches topics, analyzes content, and
 - 🌐 **Web Interface**: Simple web UI for submitting research queries
 
 ## Quick Start
+```bash
+cd auto-research-report-agent/
+```
 
 ### 1. Install Dependencies
 
@@ -51,9 +54,6 @@ GCS_REPORTS_BUCKET=your-reports-bucket-name
 
 ### 4. Run the Application
 
-```bash
-cd Auto-Research-Report-Agent/
-```
 ```bash
 python main.py
 ```
