@@ -1,3 +1,4 @@
+flask
 # Google Cloud & AI
 google-cloud-storage
 google-generativeai
