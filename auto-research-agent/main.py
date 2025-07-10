@@ -1,10 +1,8 @@
-# auto-research-agent/main.py
-
 # import functions_framework
 from flask import jsonify, send_from_directory
 from orchestrator.main_orchestrator import MainOrchestrator
 from flask import Flask, request, jsonify, render_template
-
+import os
 
 app = Flask(__name__)
 
@@ -110,5 +108,8 @@ def download_report(filename):
     from config import TEMP_DIR
     return send_from_directory(TEMP_DIR, filename, as_attachment=True)
 
+
+
+port = int(os.environ.get("PORT", 5000))
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=port, debug=True)
